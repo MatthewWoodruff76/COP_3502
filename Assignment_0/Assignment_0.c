@@ -6,20 +6,21 @@
 
 void printHandles(char handles[][MAX_LENGTH], int total_handles){
 	int index;
-	for(index = 0; index<total_handles; index++){
-		printf("%s\n", handles[index]);
-	}
+	printf("\n");
+	for(index = 0; index<total_handles; index++) printf("%s\n", handles[index]);
 }
 
 int main(){
+	
+	//Reads in the desired number of entries
 	
 	int total_names, name, index;
 	printf("How many handles will be generated?\nInteger value: ");
 	scanf("%d", &total_names);
 	
-	//Invalid entry handling
+	//Rejects invalid numberical entries
 	
-	if(total_names<=0) {
+	if(total_names<=0||total_names>=MAX_LENGTH) {
 		printf("\nGet lost.");
 		return 1;
 	}
@@ -35,7 +36,7 @@ int main(){
 	
 	//Reads input
 	
-	printf("Begin listing names:.\n");
+	printf("Enter names below.\n");
 	getchar();
 	for(name = 0; name<total_names; name++){
 		index = 0;
@@ -59,8 +60,9 @@ int main(){
 	
 	//Prints results
 	
-	//printHandles(names,total_names);
 	printHandles(handles,total_names);
+	printf("\n\nPress any key to exit...");
+	getchar(); //Pauses to display answer.
 	return 0;
 }
 
