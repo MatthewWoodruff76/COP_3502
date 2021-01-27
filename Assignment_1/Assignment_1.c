@@ -19,19 +19,28 @@ void Arrow_New(arrow *);
 void Arrow_Delete(arrow *);
 void Arrow_Grow(arrow *);
 void Arrow_AddPiece(arrow *, int, int, int);
+int Target_Check(int r, int c, int target_size[2]);
 
 int main(){
-	int i, j, k, n, r, c, R, C, current_row = 0, current_column = 0, ** bag;
+	int i, j, k, n = 0, target_size[2] = {0, 0}, r, c, R, C, current_row = 0, current_column = 0, ** bag;
+	while(n==0){
 	printf("Desired number of rooks: ");
 	scanf("%d", &n);
-	bag = malloc(n*sizeof(int*));							//Allocates memory equal to an array of int pointers.
-	for(i = 0; i<n;i++) bag[i] = malloc(10*sizeof(int));	//Allocates memory for each row,
+	if(n>MAX_ROOKS||n<1) printf("\nEnter a value from 1 to %d.", MAX_ROOKS);
+	}
+
 	
-	struct arrow rows[n];
+	bag = malloc(n*sizeof(int*));							//Allocates memory equal to an array of int pointers.
+	for(i = 0; i<n;i++) bag[i] = malloc(10*sizeof(int));	//Allocates memory for each row
+	
+	struct arrow rows[n];		//These grow linearly with n, so using resizeable arrays would probably be less efficient.
 	struct arrow columns[n];
 	
 	printf("Rook %d is at: ", 1);
 	scanf("%d %d", &r, &c);
+	
+	if(Target_Check(r, c, target_size)==1) return 1;
+
 	bag[0][0] = r;
 	bag[0][1] = c;
 	Arrow_New(&rows[current_row]); //adds a new row
@@ -42,6 +51,7 @@ int main(){
 	for(i = 1; i <n; i++){					//Reads input
 		printf("Rook %d is at: ", i+1);
 		scanf("%d %d", &r, &c);
+		if(Target_Check(r, c, target_size)==1) return 1;
 		bag[i][0] = r;
 		bag[i][1] = c;
 		R =-1, C =-1;
@@ -184,4 +194,17 @@ void Arrow_AddPiece(arrow * arrow, int ID, int index, int level){
     (*arrow).pieces[(*arrow).size][1] = index;						//Location along the arrow
     (*arrow).level = level;											//Location of the arrow
     (*arrow).size++;
+}
+int Target_Check(int r, int c, int target_size[2]){
+	if(r<1||c<1) {
+		printf("\nThe requested position (%d, %d) is not allowable.", r, c);
+		return 1;
+	}
+	if(r>target_size[0]) target_size[0] = r;
+	if(c>target_size[1]) target_size[1] = c;
+	if(target_size[0]*target_size[1]>MAX_SPOTS) {
+		printf("\nThe requested board size of (%d x %d) exceeds the accepted range.", target_size[0], target_size[1]);
+		return 1;
+	}
+	return 0;
 }
