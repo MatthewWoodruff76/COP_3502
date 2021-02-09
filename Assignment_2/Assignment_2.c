@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 
 #define BOUND 1000000000
@@ -13,7 +12,7 @@ int ceiling(double);		//No need for a floor function as integer division perform
 
 int main(){
 	
-	int tally = 0, guess, n, lower_bound = 1, upper_bound, half_delta, index, max_tries;
+	int tally = 0, guess, n, lower_bound = 1, upper_bound, half_delta, index;
 	char user_response[15], word2[10], word3[10];											//Set to 15 to accomodate the longest valid response
 	while(1){
 		scanf("%d", &n);
@@ -22,18 +21,15 @@ int main(){
 
 	upper_bound = n;												//While n itself is usable as the upper_bound, it has no conjugate
 	guess = n;
-	max_tries = 1+2*ceiling(log(1.0*n)/log(2.0));					//Assigns the value to a variable rather
 	
-	while(tally<max_tries){											//Tally starts at 0, so it must be less than and not equal to max_tries
+	while(1){														//Indeterminate loop
 		
 		half_delta = ceiling(0.5*(upper_bound-lower_bound));
 		
 		//Guess
 		printf("%d\n", guess);
 		fflush(stdout);
-	
 
-		
 		scanf("%s", &user_response);
 		if(strcmp(user_response,"No.")==0&&tally>0) {				//The first entry is a special case
 			scanf("%s", &word2);
@@ -47,7 +43,6 @@ int main(){
 		}
 
 		//Check input and adjust accordingly
-		if(strcmp(user_response, "Yes!!!")==0) return 0;			//Exits the program upon victory.
 		if(strcmp(user_response, "No. Warmer.")==0){
 			if(guess <= lower_bound){
 				upper_bound -= half_delta;
@@ -71,14 +66,14 @@ int main(){
 		if(strcmp(user_response,"No.")==0) guess = 1;				//Runs the second search
 		if(strcmp(user_response,"No. No change.")==0) {
 			guess = lower_bound + half_delta;
+			printf("%d\n", guess);									//This guess is correct, so the program exits
+			fflush(stdout);
+			break;
 		}
 		if(guess>BOUND||guess<-BOUND) return 1;
 		tally++;
 	}
-
-	printf("Game Over.");
-	fflush(stdout);
-	return 1;
+	return 0;
 }
 
 int ceiling(double value){
